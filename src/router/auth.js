@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 export class RouterAuth {
 
+
     static Create() {
 
         const router = Router();

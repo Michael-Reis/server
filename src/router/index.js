@@ -11,8 +11,6 @@ export class Routes {
     setupRoutes() {
 
         this.routes.use('/auth', RouterAuth.Create());
-        // this.routes.use('/produtos', this.RouterProdutos);
-        // this.routes.use('/clientes', this.RouterClientes);  
 
         return this.routes;
 
