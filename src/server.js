@@ -1,19 +1,20 @@
-import express from 'express';
 import { Routes } from './router/index.js';
+import dotenv from "dotenv";
+import express from 'express';
 import morgan from 'morgan';
-
-import fs from 'fs';
-import path from 'path';
+import cors from 'cors';
 
 
 export class Server {
     constructor() {
+        dotenv.config();
         this.express = express();
         this.middlewares();
         this.Routes();
     }
 
     middlewares() {
+        this.express.use(cors());
         this.express.use(express.json());
         this.express.use(morgan('dev'));
         this.express.use(this.errorHandlingMiddleware);
