@@ -1,5 +1,10 @@
 import express from 'express';
 import { Routes } from './router/index.js';
+import morgan from 'morgan';
+
+import fs from 'fs';
+import path from 'path';
+
 
 export class Server {
     constructor() {
@@ -10,6 +15,7 @@ export class Server {
 
     middlewares() {
         this.express.use(express.json());
+        this.express.use(morgan('dev'));
         this.express.use(this.errorHandlingMiddleware);
 
     }
@@ -20,7 +26,6 @@ export class Server {
         }
         next();
     }
-
 
     Routes() {
         this.router = new Routes();
