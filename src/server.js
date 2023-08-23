@@ -10,7 +10,17 @@ export class Server {
 
     middlewares() {
         this.express.use(express.json());
+        this.express.use(this.errorHandlingMiddleware);
+
     }
+
+    errorHandlingMiddleware(err, req, res, next) {
+        if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+            return res.status(400).json({ mensagem: 'JSON icorreto' });
+        }
+        next();
+    }
+
 
     Routes() {
         this.router = new Routes();

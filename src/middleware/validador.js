@@ -1,15 +1,13 @@
 export class MiddlewareValidador {
-
-    validateInput = (schema) => {
-
+    Validate = (schema) => {
         return (req, res, next) => {
-            const { error } = schema.validate(req.body);
+            const { error } = schema.validate(req.body, { abortEarly: false });
             if (error) {
-                return res.status(400).json({ mensagem: error.details[0].message });
+                const errorMessages = error.details.map(detail => detail.message);
+                return res.status(400).json({ mensagens: errorMessages });
             }
-
+            
             next();
         };
     }
-
 }

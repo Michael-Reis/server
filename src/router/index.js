@@ -9,10 +9,7 @@ export class Routes {
     }
 
     setupRoutes() {
-
-        this.routes.use('/auth', RouterAuth.Create());
-
-        return this.routes;
-
+        
+        this.routes.use('/auth', new RouterAuth().setupRoutes());
     }
 }
