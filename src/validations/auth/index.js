@@ -12,4 +12,12 @@ export class SchemaAuth {
     });
   }
 
+
+  Login(){
+    return Joi.object({
+      email: Joi.string().email().required(),
+      senha: Joi.string().min(6).required(),
+    });
+  }
+
 }

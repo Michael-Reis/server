@@ -18,6 +18,12 @@ export class RouterAuth {
             this.controller.Register(req, res);
         });
 
+
+        this.router.post('/login', this.middleware.Validate(this.schema.Login()), (req, res) => {
+            this.controller.Login(req, res);
+        })
+
+
         return this.router;
     }
 }

@@ -26,4 +26,26 @@ export class ControllerAuth {
     }
 
 
+    async Login(req, res) {
+        try {
+            const userData = req.body;
+            const token = await this.service.Login(userData);
+            res.cookie('token', token, token.cookiesOptions);
+            return res.status(200).json(token);
+            
+        } catch (error) {
+
+            const statusError = {
+                "Email não cadastrado": 404,
+                "Senha incorreta": 401,
+            }
+    
+            const statusCode = statusError[error.message] || 500;
+            const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
+    
+            return res.status(statusCode).json({ error: errorMessage });
+        }
+    }
+    
+
 }
