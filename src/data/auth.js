@@ -14,9 +14,9 @@ export class DataAuth {
 
     }
 
-    async CreateUser(nome, email, senha) {
-        const query = `INSERT INTO usuarios (nome, email, senha, dt_inclusao) VALUES (?, ?, ?, NOW())`;
-        const valores = [nome, email, senha];
+    async CreateUser(nome, email, senha, id_empresa, id_permissao) {
+        const query = `INSERT INTO usuarios (nome, email, senha, id_empresa, id_permissao, dt_inclusao) VALUES (?, ?, ?, ?, ?, NOW())`;
+        const valores = [nome, email, senha, id_empresa, id_permissao];
         return await this.conexao.executarQuery(query, valores);
     }
 

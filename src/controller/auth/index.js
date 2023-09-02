@@ -39,7 +39,8 @@ export class ControllerAuth {
                 "Email não cadastrado": 404,
                 "Senha incorreta": 401,
             }
-    
+            
+            console.log(error.message)
             const statusCode = statusError[error.message] || 500;
             const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
     

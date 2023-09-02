@@ -10,7 +10,7 @@ export class ServiceAuth {
 
     async Register(userData) {
 
-        const { email, nome, senha } = userData;
+        const { email, nome, senha, id_empresa, id_permissao } = userData;
         const userExists = await this.data.GetUserByEmail(email);
 
         if (userExists.length > 0) {
@@ -18,7 +18,7 @@ export class ServiceAuth {
         }
 
         const hash = await bcrypt.hash(senha, 10);
-        await this.data.CreateUser(nome, email, hash);
+        await this.data.CreateUser(nome, email, hash, id_empresa, id_permissao);
         return { mensagem: "Usuário cadastrado com sucesso!" };
     }
 
@@ -57,7 +57,7 @@ export class ServiceAuth {
 
             return { token, cookiesOptions: cookiesOptions };
 
-        } catch (error) {   
+        } catch (error) {
             throw new Error(error.message);
         }
 
