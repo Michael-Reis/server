@@ -3,9 +3,10 @@ import { ControllerAuth } from '../controller/auth/index.js';
 import { SchemaAuth } from '../validations/auth/index.js';
 import { MiddlewareValidador } from '../middleware/validador.js';
 
-export class RouterAuth {
+export class RouterCustomer {
 
     constructor() {
+
         this.router = Router();
         this.controller = new ControllerAuth();
         this.schema = new SchemaAuth();
@@ -14,17 +15,13 @@ export class RouterAuth {
     }
 
     setupRoutes() {
-
         this.router.post('/register', this.middleware.Validate(this.schema.Register()), (req, res) => {
             this.controller.Register(req, res);
         });
 
+
         this.router.post('/login', this.middleware.Validate(this.schema.Login()), (req, res) => {
             this.controller.Login(req, res);
-        })
-
-        this.router.get('/users', this.middleware.CookieValidate(this.schema.Users()), this.middleware.AuthValidate(), (req, res) => {
-            this.controller.GetUsers(req, res);
         })
 
 

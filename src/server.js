@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
 
 
 export class Server {
@@ -15,6 +17,8 @@ export class Server {
 
     middlewares() {
         this.express.use(cors());
+        this.express.use(cookieParser());
+
         this.express.use(express.json());
         this.express.use(morgan('dev'));
         this.express.use(this.errorHandlingMiddleware);

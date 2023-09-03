@@ -14,9 +14,9 @@ export class DataAuth {
 
     }
 
-    async CreateUser(nome, email, senha, id_empresa, id_permissao) {
-        const query = `INSERT INTO usuarios (nome, email, senha, id_empresa, id_permissao, dt_inclusao) VALUES (?, ?, ?, ?, ?, NOW())`;
-        const valores = [nome, email, senha, id_empresa, id_permissao];
+    async CreateUser(uuid, nome, email, senha, id_empresa, id_permissao) {
+        const query = `INSERT INTO usuarios (uuid, nome, email, senha, id_empresa, id_permissao, dt_inclusao) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
+        const valores = [uuid, nome, email, senha, id_empresa, id_permissao];
         return await this.conexao.executarQuery(query, valores);
     }
 
@@ -24,6 +24,11 @@ export class DataAuth {
         const query = `UPDATE usuarios SET token = ? WHERE id_usuario = ?`;
         const valores = [token, id_usuario];
         return await this.conexao.executarQuery(query, valores);
+    }
+
+    async GetUsers() {
+        const query = `SELECT * FROM usuarios`;
+        return await this.conexao.executarQuery(query);
     }
 
 }

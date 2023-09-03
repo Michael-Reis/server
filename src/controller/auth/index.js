@@ -30,23 +30,38 @@ export class ControllerAuth {
         try {
             const userData = req.body;
             const token = await this.service.Login(userData);
-            res.cookie('token', token, token.cookiesOptions);
+
+            const { email, uuid, token: tokenUser } = token;
+
+            res
+                .cookie('email', email, token.cookiesOptions)
+                .cookie('uuid', uuid, token.cookiesOptions)
+                .cookie('token', tokenUser, token.cookiesOptions);
+
             return res.status(200).json(token);
-            
+
         } catch (error) {
 
             const statusError = {
                 "Email não cadastrado": 404,
                 "Senha incorreta": 401,
             }
-            
+
             console.log(error.message)
             const statusCode = statusError[error.message] || 500;
             const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
-    
+
             return res.status(statusCode).json({ error: errorMessage });
         }
     }
-    
+
+    async GetUsers(req, res) {
+        try {
+            const users = await this.service.GetUsers();
+            return res.status(200).json(users);
+        } catch (error) {
+            return res.status(500).json({ error: error.message });
+        }
+    }
 
 }

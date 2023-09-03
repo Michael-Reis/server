@@ -32,4 +32,16 @@ export class SchemaAuth {
     });
   }
 
+  Users() {
+    return Joi.object({
+      email: Joi.string().email().required(),
+      uuid: Joi.string().required(),
+      token: Joi.string().required(),
+    }).messages({
+      'string.base': `"{{#label}}" deve ser uma string`,
+      'string.empty': `"{{#label}}" não pode estar vazio`,
+      'any.required': `"{{#label}}" é um campo obrigatório`,
+    })
+  }
+
 }

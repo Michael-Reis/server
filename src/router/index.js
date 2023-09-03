@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { RouterAuth } from './auth.js';
 
+
 export class Routes {
 
     constructor() {

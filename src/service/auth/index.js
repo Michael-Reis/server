@@ -1,6 +1,8 @@
 import { DataAuth } from "../../data/auth.js";
 import jwt from "jsonwebtoken";
 import * as bcrypt from 'bcrypt';
+import { randomUUID } from "crypto";
+
 
 export class ServiceAuth {
 
@@ -17,8 +19,10 @@ export class ServiceAuth {
             throw new Error("Email já cadastrado");
         }
 
+        const uuid = randomUUID();
+
         const hash = await bcrypt.hash(senha, 10);
-        await this.data.CreateUser(nome, email, hash, id_empresa, id_permissao);
+        await this.data.CreateUser(uuid, nome, email, hash, id_empresa, id_permissao);
         return { mensagem: "Usuário cadastrado com sucesso!" };
     }
 
@@ -55,7 +59,7 @@ export class ServiceAuth {
                 httpOnly: true,
             }
 
-            return { token, cookiesOptions: cookiesOptions };
+            return { token, email: user.email, nome: user.nome, uuid: user.uuid, cookiesOptions: cookiesOptions };
 
         } catch (error) {
             throw new Error(error.message);
@@ -66,4 +70,19 @@ export class ServiceAuth {
     async TokenJWT(payload) {
         return jwt.sign(payload, process.env.JWT_SECRET);
     }
+
+    async GetUsers() {
+
+        try {
+            const users = await this.data.GetUsers();
+            return users;
+
+        } catch (error) {
+            throw new Error(error.message);
+        }
+
+    }
+
+
+
 }
