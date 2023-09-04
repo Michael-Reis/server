@@ -9,22 +9,21 @@ export class ControllerAuth {
     async Register(req, res) {
 
         try {
-            const userData = req.body;
-            const newUser = await this.service.Register(userData);
-            return res.status(201).json(newUser);
+            const user_data = req.body;
+            const new_user = await this.service.Register(user_data);
+            return res.status(201).json(new_user);
 
         } catch (error) {
 
-            const statusError = {
+            const status_error = {
                 "Email já cadastrado": 409,
                 "Você não tem permissão para cadastrar um usuário com essa permissão": 403,
                 "Usuário não encontrado": 404
             }
 
-
-            const statusCode = statusError[error.message] || 500;
-            const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
-            return res.status(statusCode).json({ error: errorMessage });
+            const status_code = status_error[error.message] || 500;
+            const error_message = status_error[error.message] ? error.message : "Internal Server Error";
+            return res.status(status_code).json({ error: error_message });
         }
 
     }
@@ -32,32 +31,27 @@ export class ControllerAuth {
 
     async Login(req, res) {
         try {
-            const userData = req.body;
-            const token = await this.service.Login(userData);
-
-            const { email, uuid, token: tokenUser } = token;
+            const user_data = req.body;
+            const token = await this.service.Login(user_data);
+            const { uuid, token: token_user } = token;
 
             res
-                // .cookie('email', email, token.cookiesOptions)
                 .cookie('uuid', uuid, token.cookiesOptions)
-                .cookie('token', tokenUser, token.cookiesOptions);
+                .cookie('token', token_user, token.cookiesOptions);
 
             return res.status(200).json(token);
 
         } catch (error) {
 
-            const statusError = {
+            const status_error = {
                 "Email não cadastrado": 404,
                 "Senha incorreta": 401,
             }
 
-            console.log(error)
+            const status_code = status_error[error.message] || 500;
+            const error_message = status_error[error.message] ? error.message : "Internal Server Error";
 
-
-            const statusCode = statusError[error.message] || 500;
-            const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
-
-            return res.status(statusCode).json({ error: errorMessage });
+            return res.status(status_code).json({ error: error_message });
         }
     }
 
