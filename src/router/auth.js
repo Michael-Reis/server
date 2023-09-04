@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ControllerAuth } from '../controller/auth/index.js';
 import { SchemaAuth } from '../validations/auth/index.js';
-import { MiddlewareValidador } from '../middleware/validador.js';
+import { MiddlewareValidador } from '../middleware/validate.js';
 
 export class RouterAuth {
 

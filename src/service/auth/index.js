@@ -1,13 +1,15 @@
-import { DataAuth } from "../../data/auth.js";
+import { randomUUID } from "crypto";
 import jwt from "jsonwebtoken";
 import * as bcrypt from 'bcrypt';
-import { randomUUID } from "crypto";
 
+import { Permission } from "../../module/permission.js";
+import { DataAuth } from "../../data/auth.js";
 
 export class ServiceAuth {
 
     constructor() {
         this.data = new DataAuth();
+        this.permission = new Permission();
     }
 
     async Register(userData) {
@@ -71,17 +73,21 @@ export class ServiceAuth {
         return jwt.sign(payload, process.env.JWT_SECRET);
     }
 
-    async GetUsers() {
 
+
+    async GetUsers(uuid) {
         try {
-            const users = await this.data.GetUsers();
+
+            const [user] = await this.data.getUserByUuid(uuid);
+            const getUsersFunction = this.data.GetUsers.bind(this.data);
+            const users = await this.permission.listDataByPermission(user, getUsersFunction);
             return users;
 
         } catch (error) {
             throw new Error(error.message);
         }
-
     }
+
 
 
 

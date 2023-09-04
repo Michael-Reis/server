@@ -11,7 +11,12 @@ export class DataAuth {
         const valores = [email];
         const result = await this.conexao.executarQuery(query, valores);
         return result;
+    }
 
+    getUserByUuid(uuid) {
+        const query = `SELECT * FROM usuarios WHERE uuid = ?`;
+        const valores = [uuid];
+        return this.conexao.executarQuery(query, valores);
     }
 
     async CreateUser(uuid, nome, email, senha, id_empresa, id_permissao) {
@@ -26,9 +31,11 @@ export class DataAuth {
         return await this.conexao.executarQuery(query, valores);
     }
 
-    async GetUsers() {
-        const query = `SELECT * FROM usuarios`;
-        return await this.conexao.executarQuery(query);
+    async GetUsers(id_empresa) {
+        const query = `SELECT * FROM usuarios ${id_empresa ? `WHERE id_empresa = ?` : ''}`;
+        const valores = id_empresa ? [id_empresa] : [];
+        return await this.conexao.executarQuery(query, valores);
     }
+
 
 }

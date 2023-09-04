@@ -34,7 +34,7 @@ export class ControllerAuth {
             const { email, uuid, token: tokenUser } = token;
 
             res
-                .cookie('email', email, token.cookiesOptions)
+                // .cookie('email', email, token.cookiesOptions)
                 .cookie('uuid', uuid, token.cookiesOptions)
                 .cookie('token', tokenUser, token.cookiesOptions);
 
@@ -57,9 +57,13 @@ export class ControllerAuth {
 
     async GetUsers(req, res) {
         try {
-            const users = await this.service.GetUsers();
+
+            const { uuid } = req.cookies;
+            const users = await this.service.GetUsers(uuid);
+
             return res.status(200).json(users);
         } catch (error) {
+            console.log(error.message)
             return res.status(500).json({ error: error.message });
         }
     }
