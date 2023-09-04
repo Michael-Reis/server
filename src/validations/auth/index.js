@@ -35,7 +35,7 @@ export class SchemaAuth {
 
   Users() {
     return Joi.object({
-      email: Joi.string().email().required(),
+      // email: Joi.string().email().required(),
       uuid: Joi.string().required(),
       token: Joi.string().required(),
     }).messages({

@@ -10,8 +10,8 @@ export class MiddlewareValidador {
         return (req, res, next) => {
             const { error } = schema.validate(req.body, { abortEarly: false, language: { key: '{{label}}' } });
             if (error) {
-                const errorMessages = error.details.map(detail => detail.message.replace(/"/g, '')); // Remover as aspas duplas
-                return res.status(400).json({ error: errorMessages });
+                const error_message = error.details.map(detail => detail.message.replace(/"/g, '')); // Remover as aspas duplas
+                return res.status(400).json({ error: error_message });
             }
 
             next();
@@ -24,9 +24,8 @@ export class MiddlewareValidador {
             const { error } = schema.validate(req.cookies, { abortEarly: false, language: { key: '{{label}}' } });
 
             if (error) {
-                console.log(error)
-                const errorMessages = error.details.map(detail => detail.message.replace(/"/g, '')); // Remover as aspas duplas
-                return res.status(400).json({ error: errorMessages });
+                const error_message = error.details.map(detail => detail.message.replace(/"/g, '')); // Remover as aspas duplas
+                return res.status(400).json({ error: error_message });
             }
 
             next();
@@ -37,14 +36,13 @@ export class MiddlewareValidador {
 
         return async (req, res, next) => {
 
-            const { email, uuid, token } = req.cookies;
+            const { uuid, token } = req.cookies;
 
-            if (email && uuid && token) {
+            if (uuid && token) {
 
-                const [user] = await this.data.GetUserByEmail(email);
+                const [user] = await this.data.getUserByUuid(uuid);
 
-
-                if (user.length > 0 && user.uuid === uuid && user.token === token) {
+                if (user && user.uuid === uuid && user.token === token) {
                     next();
                 } else {
                     return res.status(401).json({ error: "Não autorizado" });

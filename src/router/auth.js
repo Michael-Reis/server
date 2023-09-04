@@ -27,7 +27,6 @@ export class RouterAuth {
             this.controller.GetUsers(req, res);
         })
 
-
         return this.router;
     }
 }
