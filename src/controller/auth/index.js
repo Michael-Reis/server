@@ -17,10 +17,14 @@ export class ControllerAuth {
 
             const statusError = {
                 "Email já cadastrado": 409,
+                "Você não tem permissão para cadastrar um usuário com essa permissão": 403,
+                "Usuário não encontrado": 404
             }
 
-            const statusCode = statusError[error.message] ? statusError[error.message] : 500;
-            return res.status(statusCode).json({ error: error.message });
+
+            const statusCode = statusError[error.message] || 500;
+            const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
+            return res.status(statusCode).json({ error: errorMessage });
         }
 
     }
@@ -47,7 +51,9 @@ export class ControllerAuth {
                 "Senha incorreta": 401,
             }
 
-            console.log(error.message)
+            console.log(error)
+
+
             const statusCode = statusError[error.message] || 500;
             const errorMessage = statusError[error.message] ? error.message : "Internal Server Error";
 

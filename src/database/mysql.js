@@ -1,9 +1,9 @@
 
 import mysql from "mysql2/promise"
 
-export class ConexaoMysql {
+export class ConnectionMysql {
 
-    async ConexaoMysql() {
+    async ConnectionMysql() {
         const conexao = await mysql.createConnection({
             host: process.env.HOST,
             user: process.env.USER,
@@ -13,8 +13,8 @@ export class ConexaoMysql {
         return conexao;
     }
 
-    async executarQuery(query, valores) {
-        const conexao = await this.ConexaoMysql();
+    async executeQuery(query, valores) {
+        const conexao = await this.ConnectionMysql();
         const [resultados] = await conexao.execute(query, valores);
         await conexao.end();
         return resultados;

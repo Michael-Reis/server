@@ -41,12 +41,10 @@ export class MiddlewareValidador {
 
             if (email && uuid && token) {
 
-                console.log("validando")
-
-                const user = await this.data.GetUserByEmail(email);
+                const [user] = await this.data.GetUserByEmail(email);
 
 
-                if (user.length > 0 && user[0].uuid === uuid && user[0].token === token) {
+                if (user.length > 0 && user.uuid === uuid && user.token === token) {
                     next();
                 } else {
                     return res.status(401).json({ error: "Não autorizado" });

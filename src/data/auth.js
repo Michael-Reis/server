@@ -1,40 +1,40 @@
-import { ConexaoMysql } from "../database/mysql.js";
+import { ConnectionMysql } from "../database/mysql.js";
 
 export class DataAuth {
 
     constructor() {
-        this.conexao = new ConexaoMysql();
+        this.conexao = new ConnectionMysql();
     }
 
     async GetUserByEmail(email) {
-        const query = `SELECT * FROM usuarios WHERE email = ?`;
-        const valores = [email];
-        const result = await this.conexao.executarQuery(query, valores);
+        const query = `SELECT * FROM users WHERE email = ?`;
+        const values = [email];
+        const result = await this.conexao.executeQuery(query, values);
         return result;
     }
 
     getUserByUuid(uuid) {
-        const query = `SELECT * FROM usuarios WHERE uuid = ?`;
-        const valores = [uuid];
-        return this.conexao.executarQuery(query, valores);
+        const query = `SELECT * FROM users WHERE uuid = ?`;
+        const values = [uuid];
+        return this.conexao.executeQuery(query, values);
     }
 
-    async CreateUser(uuid, nome, email, senha, id_empresa, id_permissao) {
-        const query = `INSERT INTO usuarios (uuid, nome, email, senha, id_empresa, id_permissao, dt_inclusao) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
-        const valores = [uuid, nome, email, senha, id_empresa, id_permissao];
-        return await this.conexao.executarQuery(query, valores);
+    async CreateUser(uuid, name, email, password, id_company, id_permission) {
+        const query = `INSERT INTO users (uuid, name, email, password, id_company, id_permission, dt_inclusion) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
+        const values = [uuid, name, email, password, id_company, id_permission];
+        return await this.conexao.executeQuery(query, values);
     }
 
-    async CreateTokenUser(token, id_usuario) {
-        const query = `UPDATE usuarios SET token = ? WHERE id_usuario = ?`;
-        const valores = [token, id_usuario];
-        return await this.conexao.executarQuery(query, valores);
+    async CreateTokenUser(token, id_user) {
+        const query = `UPDATE users SET token = ? WHERE id_user = ?`;
+        const values = [token, id_user];
+        return await this.conexao.executeQuery(query, values);
     }
 
-    async GetUsers(id_empresa) {
-        const query = `SELECT * FROM usuarios ${id_empresa ? `WHERE id_empresa = ?` : ''}`;
-        const valores = id_empresa ? [id_empresa] : [];
-        return await this.conexao.executarQuery(query, valores);
+    async GetUsers(id_company) {
+        const query = `SELECT * FROM users ${id_company ? `WHERE id_company = ?` : ''}`;
+        const values = id_company ? [id_company]  : [];
+        return await this.conexao.executeQuery(query, values);
     }
 
 

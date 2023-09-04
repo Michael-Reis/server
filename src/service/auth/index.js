@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 
 import { Permission } from "../../module/permission.js";
 import { DataAuth } from "../../data/auth.js";
+import { request } from "http";
 
 export class ServiceAuth {
 
@@ -12,19 +13,28 @@ export class ServiceAuth {
         this.permission = new Permission();
     }
 
-    async Register(userData) {
+    async Register({ email, name, password, id_company, id_permission, uuid: creator_id }) {
 
-        const { email, nome, senha, id_empresa, id_permissao } = userData;
-        const userExists = await this.data.GetUserByEmail(email);
+        const [requester_user] = await this.data.getUserByUuid(creator_id);
 
-        if (userExists.length > 0) {
+        if (!requester_user) {
+            throw new Error("Usuário não encontrado");
+        }
+
+        const [user_exist] = await this.data.GetUserByEmail(email);
+
+        if (user_exist) {
             throw new Error("Email já cadastrado");
         }
 
-        const uuid = randomUUID();
+        if (id_permission == 1 && requester_user.id_permission != 1) {
+            throw new Error("Você não tem permissão para cadastrar um usuário com essa permissão");
+        }
 
-        const hash = await bcrypt.hash(senha, 10);
-        await this.data.CreateUser(uuid, nome, email, hash, id_empresa, id_permissao);
+        const uuid = randomUUID();
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await this.data.CreateUser(uuid, name, email, hashedPassword, id_company, id_permission);
+
         return { mensagem: "Usuário cadastrado com sucesso!" };
     }
 
@@ -33,35 +43,34 @@ export class ServiceAuth {
 
         try {
 
-            const { email, senha } = userData;
-            const userExists = await this.data.GetUserByEmail(email);
+            const { email, password } = userData;
+            const [user_exist] = await this.data.GetUserByEmail(email);
 
-            if (userExists.length === 0) {
+            if (!user_exist) {
                 throw new Error("Email não cadastrado");
             }
 
-            const user = userExists[0];
-            const match = await bcrypt.compare(senha, user.senha);
+            const user = user_exist;
 
+            const match = await bcrypt.compare(password, user.password);
             if (!match) {
                 throw new Error("Senha incorreta");
             }
 
             const payload = {
-                id_usuario: user.id_usuario,
-                nome: user.nome
+                id_user: user.id_user,
+                name: user.name
             }
 
             const token = await this.TokenJWT(payload)
-            await this.data.CreateTokenUser(token, user.id_usuario);
-
+            await this.data.CreateTokenUser(token, user.id_user);
             const cookiesOptions = {
                 secure: (process.env.COOKIE_SECURE == 'true' ? true : false) || false, // alterar para true em produção
                 path: '/',
                 httpOnly: true,
             }
 
-            return { token, email: user.email, nome: user.nome, uuid: user.uuid, cookiesOptions: cookiesOptions };
+            return { token, email: user.email, name: user.name, uuid: user.uuid, cookiesOptions: cookiesOptions };
 
         } catch (error) {
             throw new Error(error.message);
@@ -72,8 +81,6 @@ export class ServiceAuth {
     async TokenJWT(payload) {
         return jwt.sign(payload, process.env.JWT_SECRET);
     }
-
-
 
     async GetUsers(uuid) {
         try {
