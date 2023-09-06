@@ -6,6 +6,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 export class Server {
+
     constructor() {
         dotenv.config();
         this.express = express();
@@ -30,7 +31,7 @@ export class Server {
 
     Routes() {
         this.router = new Routes();
-        this.express.use(this.router.routes);
+        this.express.use(this.router.setupRoutes());
     }
 
     listen(port, callback) {

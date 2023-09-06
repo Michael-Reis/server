@@ -10,7 +10,6 @@ export class RouterAuth {
         this.controller = new ControllerAuth();
         this.schema = new SchemaAuth();
         this.middleware = new MiddlewareValidador();
-
     }
 
     setupRoutes() {

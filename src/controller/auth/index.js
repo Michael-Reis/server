@@ -43,6 +43,8 @@ export class ControllerAuth {
 
         } catch (error) {
 
+            console.log(error)
+
             const status_error = {
                 "Email não cadastrado": 404,
                 "Senha incorreta": 401,
