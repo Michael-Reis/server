@@ -60,7 +60,10 @@ export class ControllerAuth {
     async GetUsers(req, res) {
         try {
             const { uuid } = req.cookies;
-            const users = await this.service.GetUsers(uuid);
+            const { limit, offset } = req.query;
+            const payload = { uuid, limit, offset }
+
+            const users = await this.service.GetUsers(payload);
             return res.status(200).json(users);
         } catch (error) {
             console.log(error.message)

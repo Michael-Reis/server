@@ -35,14 +35,30 @@ export class SchemaAuth {
 
   Users() {
     return Joi.object({
-      // email: Joi.string().email().required(),
       uuid: Joi.string().required(),
       token: Joi.string().required(),
+      limit: Joi.alternatives()
+        .try(
+          Joi.number().integer().min(1).max(100).required(),
+          Joi.forbidden()
+        )
+        .optional(),
+      offset: Joi.alternatives()
+        .try(
+          Joi.number().integer().min(0).required(),
+          Joi.forbidden()
+        )
+        .optional(),
     }).messages({
       'string.base': `"{{#label}}" deve ser uma string`,
       'string.empty': `"{{#label}}" não pode estar vazio`,
       'any.required': `"{{#label}}" é um campo obrigatório`,
-    })
+      'number.base': `"{{#label}}" deve ser um número`,
+      'number.integer': `"{{#label}}" deve ser um número inteiro`,
+      'number.min': `"{{#label}}" deve ser maior ou igual a {{#limit}}`,
+      'number.max': `"{{#label}}" deve ser menor ou igual a {{#limit}}`,
+    });
   }
+
 
 }

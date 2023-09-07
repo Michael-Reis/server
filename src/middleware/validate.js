@@ -13,7 +13,6 @@ export class MiddlewareValidador {
                 const error_message = error.details.map(detail => detail.message.replace(/"/g, '')); // Remover as aspas duplas
                 return res.status(400).json({ error: error_message });
             }
-
             next();
         };
     }
@@ -22,15 +21,14 @@ export class MiddlewareValidador {
         return (req, res, next) => {
 
             const { error } = schema.validate(req.cookies, { abortEarly: false, language: { key: '{{label}}' } });
-
             if (error) {
                 const error_message = error.details.map(detail => detail.message.replace(/"/g, '')); // Remover as aspas duplas
                 return res.status(400).json({ error: error_message });
             }
-
             next();
         };
     }
+
 
     AuthValidate = () => {
 

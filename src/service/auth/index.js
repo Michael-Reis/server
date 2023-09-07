@@ -82,12 +82,14 @@ export class ServiceAuth {
         return jwt.sign(payload, process.env.JWT_SECRET);
     }
 
-    async GetUsers(uuid) {
+    async GetUsers(payload) {
         try {
+            const { uuid, limit, offset } = payload;
+            const filter = { limit, offset };
 
             const [user] = await this.data.getUserByUuid(uuid);
             const getUsersFunction = this.data.GetUsers.bind(this.data);
-            const users = await this.permission.listDataByPermission(user, getUsersFunction);
+            const users = await this.permission.listDataByPermission(user, getUsersFunction, filter);
             return users;
 
         } catch (error) {
