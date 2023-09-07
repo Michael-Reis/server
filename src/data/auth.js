@@ -31,9 +31,11 @@ export class DataAuth {
         return await this.conexao.executeQuery(query, values);
     }
 
-    async GetUsers(id_company) {
-        const query = `SELECT * FROM users ${id_company ? `WHERE id_company = ?` : ''}`;
-        const values = id_company ? [id_company]  : [];
+
+    async GetUsers(id_company, offset, limit) {
+        const baseQuery = `SELECT * FROM users ${id_company ? `WHERE id_company = ?` : ''}`;
+        const query = `${baseQuery} LIMIT ? OFFSET ?`;
+        const values = id_company ? [id_company, limit, offset] : [limit, offset];
         return await this.conexao.executeQuery(query, values);
     }
 
