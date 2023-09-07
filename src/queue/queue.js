@@ -10,9 +10,9 @@ export class Queues {
   }
 
   async setupQueueProcessing() {
-    this.queue.process(async (job) => {
-      const { email } = job.data;
-      return await this.controller_webhook.Webhook(email);
+    return this.queue.process(async (job) => {
+      const { sum } = job.data;
+      return await this.controller_webhook.Webhook(sum);
     });
   }
 }

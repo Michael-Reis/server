@@ -1,21 +1,14 @@
-import { ConnectionMysql } from "../../database/mysql.js";
-
+import { ServiceWebhook } from "../../service/webhook/index.js";
 export class ControllerWebhook {
 
     constructor() {
-        this.connection = new ConnectionMysql();
+        this.service = new ServiceWebhook();
     }
 
-    async Webhook() {
-
-        const resultado = await this.getNumber();
-        const soma = resultado.soma + 1;
-        await this.connection.executeQuery(`UPDATE teste SET soma = ?`, [soma]);
+    async Webhook(sum) {
+        return await this.service.Webhook(sum);
     }
 
-    async getNumber() {
-        const result = await this.connection.executeQuery(`SELECT soma FROM teste `);
-        return result[0]
-    }
+    
 
 }
