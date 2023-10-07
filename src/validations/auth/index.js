@@ -3,6 +3,16 @@ import Joi from "joi";
 
 export class SchemaAuth {
 
+  Autenticate() {
+    return Joi.object({
+      uuid: Joi.string().required(),
+      token: Joi.string().required(),
+    }).messages({
+      'string.base': `"{{#label}}" deve ser uma string`,
+      'string.empty': `"{{#label}}" não pode estar vazio`,
+      'any.required': `"{{#label}}" é um campo obrigatório`,
+    })
+  }
 
   Register() {
     return Joi.object({
@@ -35,8 +45,6 @@ export class SchemaAuth {
 
   Users() {
     return Joi.object({
-      uuid: Joi.string().required(),
-      token: Joi.string().required(),
       limit: Joi.alternatives()
         .try(
           Joi.number().integer().min(1).max(100).required(),

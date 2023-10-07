@@ -22,8 +22,13 @@ export class RouterAuth {
             this.controller.Login(req, res);
         })
 
-        this.router.get('/users', this.middleware.CookieValidate(this.schema.Users()), this.middleware.AuthValidate(), (req, res) => {
+        this.router.get('/users', this.middleware.AuthValidate(this.schema.Autenticate()), this.middleware.Validate(this.schema.Users()), (req, res) => {
             this.controller.GetUsers(req, res);
+        })
+
+        this.router.get("/request/*", (req, res) => {
+            console.log(req.params[0])
+            res.send("Hello World")
         })
 
         return this.router;
