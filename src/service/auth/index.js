@@ -13,19 +13,20 @@ export class ServiceAuth {
         this.permission = new Permission();
     }
 
-    async Register({ email, name, password, id_company, id_permission, uuid: creator_id }) {
 
-        const [requester_user] = await this.data.getUserByUuid(creator_id);
-
-        if (!requester_user) {
-            throw new Error("Usuário não encontrado");
-        }
-
+    async Register({ email, name, password, id_company, id_permission, token}) {
+        
+        const [requester_user] = await this.data.getUserByToken(token);
+        const [company] = await this.data.GetCompanyById(id_company);
         const [user_exist] = await this.data.GetUserByEmail(email);
 
-        if (user_exist) {
-            throw new Error("Email já cadastrado");
-        }
+
+        if (!company) throw new Error("Empresa não encontrada");
+        if (!requester_user) throw new Error("Usuário não encontrado");
+        if (company.id_company != requester_user.id_company) throw new Error("Você não tem permissão para cadastrar um usuário para essa empresa");
+
+
+        if (user_exist) throw new Error("Email já cadastrado");
 
         if (id_permission == 1 && requester_user.id_permission != 1) {
             throw new Error("Você não tem permissão para cadastrar um usuário com essa permissão");
@@ -37,6 +38,7 @@ export class ServiceAuth {
 
         return { mensagem: "Usuário cadastrado com sucesso!" };
     }
+
 
 
     async Login(userData) {

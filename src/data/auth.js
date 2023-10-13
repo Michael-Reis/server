@@ -19,6 +19,12 @@ export class DataAuth {
         return this.conexao.executeQuery(query, values);
     }
 
+    getUserByToken(token) {
+        const query = `SELECT * FROM users WHERE token = ?`;
+        const values = [token];
+        return this.conexao.executeQuery(query, values);
+    }
+
     async CreateUser(uuid, name, email, password, id_company, id_permission) {
         const query = `INSERT INTO users (uuid, name, email, password, id_company, id_permission, dt_inclusion) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
         const values = [uuid, name, email, password, id_company, id_permission];
@@ -37,9 +43,16 @@ export class DataAuth {
         let offset = filter?.offset ?? 0;
 
         const whereClause = id_company ? 'WHERE id_company = ?' : '';
-        const baseQuery = `SELECT * FROM users ${whereClause}`;
+        const baseQuery = `SELECT name, email, dt_inclusion, uuid FROM users ${whereClause}`;
         const query = `${baseQuery} LIMIT ? OFFSET ?`;
         const values = id_company ? [id_company, limit, offset] : [limit, offset];
+        const retorno = await this.conexao.executeQuery(query, values);
+        return retorno;
+    }
+
+    async GetCompanyById(id_company){
+        const query = `SELECT * FROM companies WHERE id_company = ?`;
+        const values = [id_company];
         const retorno = await this.conexao.executeQuery(query, values);
         return retorno;
     }

@@ -21,7 +21,6 @@ export class SchemaAuth {
       password: Joi.string().min(6).required(),
       id_permission: Joi.number().integer().required(),
       id_company: Joi.number().integer().required(),
-      uuid: Joi.string().required()
     }).messages({
       'string.base': `"{{#label}}" deve ser uma string`,
       'string.empty': `"{{#label}}" não pode estar vazio`,

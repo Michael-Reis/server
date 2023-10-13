@@ -9,16 +9,20 @@ export class ControllerAuth {
     async Register(req, res) {
 
         try {
-            const user_data = req.body;
+            const user_data = {...req.cookies, ...req.body};
             const new_user = await this.service.Register(user_data);
             return res.status(201).json(new_user);
 
         } catch (error) {
 
+            console.log(error.message)
+
             const status_error = {
                 "Email já cadastrado": 409,
                 "Você não tem permissão para cadastrar um usuário com essa permissão": 403,
-                "Usuário não encontrado": 404
+                "Você não tem permissão para cadastrar um usuário para essa empresa": 403,
+                "Usuário não encontrado": 404,
+                "Empresa não encontrada": 404,
             }
 
             const status_code = status_error[error.message] || 500;
@@ -62,7 +66,6 @@ export class ControllerAuth {
             const { uuid } = req.cookies;
             const { limit, offset } = req.query;
             const payload = { uuid, limit, offset }
-
             const users = await this.service.GetUsers(payload);
             return res.status(200).json(users);
         } catch (error) {

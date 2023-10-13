@@ -14,7 +14,7 @@ export class RouterAuth {
 
     setupRoutes() {
 
-        this.router.post('/register', this.middleware.Validate(this.schema.Register()), (req, res) => {
+        this.router.post('/register', this.middleware.AuthValidate(this.schema.Autenticate()), this.middleware.Validate(this.schema.Register()), (req, res) => {
             this.controller.Register(req, res);
         });
 
