@@ -38,8 +38,8 @@ export class DataAuth {
     }
 
     async GetUsers(id_company, filter = null) {
-        
-        let limit = filter?.limit ?? 10; 
+
+        let limit = filter?.limit ?? 10;
         let offset = filter?.offset ?? 0;
 
         const whereClause = id_company ? 'WHERE id_company = ?' : '';
@@ -50,7 +50,16 @@ export class DataAuth {
         return retorno;
     }
 
-    async GetCompanyById(id_company){
+    async GetUsersCount(id_company) {
+        const whereClause = id_company ? 'WHERE id_company = ?' : '';
+        const baseQuery = `SELECT COUNT(*) as count FROM users ${whereClause}`;
+        const query = `${baseQuery}`;
+        const values = id_company ? [id_company] : [];
+        const retorno = await this.conexao.executeQuery(query, values);
+        return retorno;
+    }
+
+    async GetCompanyById(id_company) {
         const query = `SELECT * FROM companies WHERE id_company = ?`;
         const values = [id_company];
         const retorno = await this.conexao.executeQuery(query, values);

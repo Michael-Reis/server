@@ -14,8 +14,8 @@ export class ServiceAuth {
     }
 
 
-    async Register({ email, name, password, id_company, id_permission, token}) {
-        
+    async Register({ email, name, password, id_company, id_permission, token }) {
+
         const [requester_user] = await this.data.getUserByToken(token);
         const [company] = await this.data.GetCompanyById(id_company);
         const [user_exist] = await this.data.GetUserByEmail(email);
@@ -86,13 +86,23 @@ export class ServiceAuth {
 
     async GetUsers(payload) {
         try {
+
             const { uuid, limit, offset } = payload;
             const filter = { limit, offset };
 
             const [user] = await this.data.getUserByUuid(uuid);
             const getUsersFunction = this.data.GetUsers.bind(this.data);
+            const GetUsersCountFunction = this.data.GetUsersCount.bind(this.data);
             const users = await this.permission.listDataByPermission(user, getUsersFunction, filter);
-            return users;
+            const [all_users] = await this.permission.listDataByPermission(user, GetUsersCountFunction);
+
+            const result = {
+                data: users,
+                recordsTotal: all_users.count,
+                recordsFiltered: users.length
+            }
+
+            return result;
 
         } catch (error) {
             throw new Error(error.message);
