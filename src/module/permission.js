@@ -20,5 +20,33 @@ export class Permission {
 
     }
 
+    checkUserPermissionForUserDeletion(user, usersToDelete) {
+
+        const userMe = usersToDelete.find(userDelete => userDelete.uuid === user.uuid);
+
+        if (userMe) {
+            throw new Error("Você não pode se deletar");
+        }
+
+        if (user.id_permission === 1) {
+            return; // Permissão concedida
+        }
+
+        if (user.id_permission !== 2) {
+            throw new Error("Você não tem permissão para deletar usuário");
+        }
+
+        const usersFromOtherCompanies = usersToDelete.filter(userDelete => userDelete.id_company !== user.id_company);
+        const superAdmins = usersToDelete.filter(userDelete => userDelete.id_permission === 1);
+
+        if (usersFromOtherCompanies.length > 0) {
+            throw new Error("Você não tem permissão para deletar usuário de outra companhia");
+        }
+
+        if (superAdmins.length > 0) {
+            throw new Error("Você não tem permissão para deletar usuário administrador global");
+        }
+    }
+
 
 }

@@ -74,4 +74,18 @@ export class ControllerAuth {
         }
     }
 
+    async DeleteUser(req, res) {
+        try {
+            const { uuid, token } = req.cookies;
+            const { ids } = req.body;
+            const payload = { uuid, ids, token }
+            const users = await this.service.DeleteUser(payload);
+            return res.status(200).json(users);
+        } catch (error) {
+            console.log(error.message)
+            return res.status(500).json({ error: error.message });
+        }
+    }
+
+
 }

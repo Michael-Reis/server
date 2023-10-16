@@ -97,7 +97,7 @@ export class ServiceAuth {
             const [all_users] = await this.permission.listDataByPermission(user, GetUsersCountFunction);
 
             const result = {
-                data: users,
+                information: users,
                 recordsTotal: all_users.count,
                 recordsFiltered: users.length
             }
@@ -109,6 +109,32 @@ export class ServiceAuth {
         }
     }
 
+
+    async DeleteUser(payload) {
+        try {
+            const { ids, token } = payload;
+            const [user] = await this.data.getUserByToken(token);
+
+            if(!user) throw new Error("Usuário não encontrado");
+
+            // Obtenha informações sobre os usuários a serem excluídos
+            const usersToDelete = await this.data.getUsersByIds(ids);
+
+            if (usersToDelete.length === 0) {
+                throw new Error("Usuário não encontrado");
+            }
+
+            this.permission.checkUserPermissionForUserDeletion(user, usersToDelete);
+
+            // Exclua os usuários
+            await this.data.DeleteUser(ids);
+
+            return {message: "Usuário deletado com sucesso!"};
+            
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
 
 
 

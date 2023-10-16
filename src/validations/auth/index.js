@@ -42,6 +42,18 @@ export class SchemaAuth {
     });
   }
 
+  DeleteUser() {
+    return Joi.object({
+      ids: Joi.array().items(Joi.string().required()).required()
+    }).messages({
+      'string.base': `"{{#label}}" deve ser uma string`,
+      'string.empty': `"{{#label}}" não pode estar vazio`,
+      'any.required': `"{{#label}}" é um campo obrigatório`,
+      'number.base': `"{{#label}}" deve ser um número`,
+      'number.integer': `"{{#label}}" deve ser um número inteiro`,
+    });
+  }
+
   Users() {
     return Joi.object({
       limit: Joi.alternatives()

@@ -26,6 +26,10 @@ export class RouterAuth {
             this.controller.GetUsers(req, res);
         })
 
+        this.router.delete('/users', this.middleware.AuthValidate(this.schema.Autenticate()), this.middleware.Validate(this.schema.DeleteUser()), (req, res) => {
+            this.controller.DeleteUser(req, res);
+        })
+
         this.router.get("/request/*", (req, res) => {
             console.log(req.params[0])
             res.send("Hello World")
